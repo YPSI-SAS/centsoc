@@ -1,0 +1,141 @@
+{$form.javascript}
+<form {$form.attributes}>  
+  <div id='tab1' class='tab'>
+    <table class="ToolbarTable table">
+      <tr>
+        <td>
+          <h4>Rechercher par result</h4>
+        </td>
+        <td>
+          <h4>Rechercher par titre</h4>
+        </td>
+        <td>
+          <p style="padding-bottom:4px; font-weight:700;" class="total-title">Total éléments: {$elemArrLength}</p>
+        </td>
+        <td>
+          <h4>Nombre d'éléments par page</h4>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {$form.resultFilter.html}
+        </td>
+        <td>
+          <input style="padding-top: 4px;" type="text" id="searchInput" placeholder="Renseignez un titre...">
+        </td>
+        <td>
+          <div>
+            <button class="btc bt_success" id="prevButton">précédent</button> 
+            <button class="btc bt_success" id="nextButton">suivant</button> 
+          </div>
+        </td>
+        <td>
+          {$form.page.html}
+        </td>
+      </tr>
+      <tr>
+        <td style="padding-top: 4px;">{$form.SearchB.html}</td>        
+      </tr>
+    </table>
+  </div>
+  
+  <table class="ListTable" id="myTable" style="margin-top: 30px;">
+		<tr class="ListHeader">
+			<th class="ListColHeaderCenter">{$headerMenu_title}</th>
+      <th class="ListColHeaderCenter" id="resultHeader">{$headerMenu_result}</th>
+      <th class="ListColHeaderCenter">{$headerMenu_file}</th>
+			<th class="ListColHeaderCenter">{$headerMenu_description}</th>
+			<th class="ListColHeaderCenter">{$headerMenu_remediation}</th>
+      <th class="ListColHeaderCenter">{$headerMenu_command}</th>
+			<th class="ListColHeaderCenter">{$headerMenu_rationale}</th>
+		</tr>
+		{section name=elem loop=$elemArr}
+    <tr class={$elemArr[elem].MenuClass}>
+      <td class="ListColCenter title">{$elemArr[elem].RowMenu_title}</td>
+      <td class="ListColCenter"><span class="badge {$elemArr[elem].RowMenu_badge} result">{$elemArr[elem].RowMenu_result}</span></td>
+      <td class="ListColCenter">{$elemArr[elem].RowMenu_file}</td>
+			<td class="ListColCenter">{$elemArr[elem].RowMenu_description}</td>
+      <td class="ListColCenter">{$elemArr[elem].RowMenu_remediation}</td>
+			<td class="ListColCenter">{$elemArr[elem].RowMenu_command}</td>
+			<td class="ListColCenter">{$elemArr[elem].RowMenu_rationale}</td>
+		</tr>
+		{/section}	
+	</table>
+  {$form.hidden}
+</form>
+
+<script type='text/javascript'>
+var nbRows = {$elemArrLength};
+var pageSize = {$pageSize};
+var curPage = {$curPage};
+</script>
+
+
+<script type='text/javascript' src="./modules/centreon-wazuh/utils.js"></script>
+
+{literal}
+<script type='text/javascript'>
+renderTable();
+function renderTable() {
+  var table = document.getElementById("myTable");
+  let start = (curPage-1)*pageSize;
+  let end = curPage*pageSize;
+
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  rows.forEach(function(row, index) {
+  // Récupérer la valeur de la colonne (exemple : colonne d'indice 2)
+  if (index >= start && index < end) {
+    row.style.display = ""; // Afficher la ligne
+  } else {
+    row.style.display = "none"; // Cacher la ligne
+  }
+  });
+}
+
+document.querySelector('#nextButton').addEventListener('click', function(event){
+  event.preventDefault();
+  if((curPage * pageSize) < nbRows) curPage++;
+  renderTable();
+});
+
+document.querySelector('#prevButton').addEventListener('click',function(event){
+  event.preventDefault();
+  if(curPage > 1) curPage--;
+  renderTable();
+
+});
+
+var resultHeader = document.getElementById("resultHeader");
+
+resultHeader.addEventListener("click", function() {
+  var table = document.getElementById("myTable");
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  
+  rows.sort(function(a, b) {
+    var resultOrder = ["failed", "passed", "not applicable"];
+    if(a.querySelector(".result") != null && b.querySelector(".result") != null){
+      var resultCellA = a.querySelector(".result").innerHTML.toLowerCase();
+      var resultCellB = b.querySelector(".result").innerHTML.toLowerCase();
+      return resultOrder.indexOf(resultCellA) - resultOrder.indexOf(resultCellB);
+    }
+    
+  });
+
+  // Réorganiser les lignes dans le tableau
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+  renderTable();
+});
+
+var searchInput = document.getElementById("searchInput");
+
+// Ajouter un écouteur d'événement pour le changement de valeur de la barre de recherche
+searchInput.addEventListener("input", function() {
+  var searchText = searchInput.value.toLowerCase();
+  checkText(searchText, ".title");
+});
+
+</script>
+{/literal}
+

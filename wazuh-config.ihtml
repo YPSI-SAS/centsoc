@@ -1,0 +1,23 @@
+{$form.javascript}
+<form {$form.attributes}>
+    <div id="validFormTop">
+        <p class="oreonbutton">{$form.submitC.html}&nbsp;&nbsp;&nbsp;{$form.reset.html}</p>
+    </div>
+    <div id='tab1' class='tab'>
+        <table class="ListTable">
+            <tr class="ListHeader"><td class="FormHeader" colspan="2"><img src='./img/icones/16x16/tool.gif'>&nbsp;&nbsp;{$form.header.title}</td></tr>          
+            <tr class="list_one" id="centreon_wazuh_manager_url_id"><td class="FormRowField">{$form.centreon_wazuh_manager_url.label}</td><td class="FormRowValue">{$form.centreon_wazuh_manager_url.html}</td></tr>
+            <tr class="list_two" id="centreon_wazuh_manager_user_id"><td class="FormRowField">{$form.centreon_wazuh_manager_user.label}</td><td class="FormRowValue">{$form.centreon_wazuh_manager_user.html}</td></tr>
+            <tr class="list_one" id="centreon_wazuh_manager_password_id"><td class="FormRowField">{$form.centreon_wazuh_manager_password.label}</td><td class="FormRowValue">{$form.centreon_wazuh_manager_password.html}</td></tr>
+        </table>
+    </div>
+    <div id="validForm">
+        <p class="oreonbutton">
+          <input name="submitC" value="Save" type="submit" class="btc bt_success">
+          &nbsp;&nbsp;&nbsp;
+          <input name="reset" value="Reset" type="button" class="btc bt_default">
+        </p>
+    </div>
+    {$form.hidden}
+</form>
+
