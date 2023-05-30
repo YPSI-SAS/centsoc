@@ -31,7 +31,7 @@ while ($row = $res->fetch()) {
 
 [$token, $status_code] = authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url);
 if($status_code!=200){
-  echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+  echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
   exit();
 }
 
@@ -117,7 +117,7 @@ if($valeurSelect !== null){
 
   [$values, $status_code] = get_vulnerabilities($wazuh_url, $token, $agentid, key($severityDefault));
   if($status_code!=200){
-    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
     exit();
   }
   $style = "one";
@@ -173,7 +173,7 @@ if($valeurSelect !== null){
 }
 
 $elemArrLength = count($elemArr);
-
+$nbPage = intval($elemArrLength/$pageSize + 1);
 
 $attrBtnSuccess = array(
   "class" => "btc bt_success",
@@ -184,6 +184,8 @@ $tpl->assign("elemArr", $elemArr);
 $tpl->assign("elemArrLength", $elemArrLength);
 $tpl->assign("pageSize", $pageSize);
 $tpl->assign("curPage", $curPage);
+$tpl->assign("nbPage", $nbPage);
+
 $tpl->assign("nbCritical", $nbCritical);
 $tpl->assign("nbLow", $nbLow);
 $tpl->assign("nbHigh", $nbHigh);

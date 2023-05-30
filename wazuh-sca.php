@@ -31,7 +31,7 @@ while ($row = $res->fetch()) {
 
 [$token, $status_code] = authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url);
 if($status_code!=200){
-  echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+  echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
   exit();
 }
 
@@ -102,7 +102,7 @@ if($valeurSelect !== null){
 
   [$values, $status_code] = get_sca($wazuh_url, $token, $agentid);
   if($status_code!=200){
-    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
     exit();
   }
   $style = "one";
@@ -126,9 +126,8 @@ if($valeurSelect !== null){
       : $style = "one";
   }
 }
-
 $elemArrLength = count($elemArr);
-
+$nbPage = intval($elemArrLength/$pageSize + 1);
 
 $attrBtnSuccess = array(
   "class" => "btc bt_success",
@@ -139,6 +138,7 @@ $tpl->assign("elemArr", $elemArr);
 $tpl->assign("elemArrLength", $elemArrLength);
 $tpl->assign("pageSize", $pageSize);
 $tpl->assign("curPage", $curPage);
+$tpl->assign("nbPage", $nbPage);
 
 $tpl->assign("headerMenu_name", _("Policy"));
 $tpl->assign("headerMenu_description", _("Description"));
@@ -199,7 +199,7 @@ $tpl->display("wazuh-sca.ihtml");
 
   [$values, $status_code] = get_sca_policy($wazuh_url, $token, $agentId, $policyId, key($resultDefault));
   if($status_code!=200){
-    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
     exit();
   }
 
@@ -220,11 +220,17 @@ $tpl->display("wazuh-sca.ihtml");
         $badge = "service_unknown";
         break;
     }
+    $remediation = str_replace ( '<', '&lt;', $values[$j]['remediation']);
+    $remediation = str_replace ( '>', '&gt;', $remediation);
+
+    $command = str_replace ( '<', '&lt;', $values[$j]['command']);
+    $command = str_replace ( '>', '&gt;', $command);
+
     $elemArr[$j] = array(
       "MenuClass" => "list_" . $style,
       "RowMenu_title" => $values[$j]['title'],
-      "RowMenu_remediation" => $values[$j]['remediation'],
-      "RowMenu_command" => $values[$j]['command'],
+      "RowMenu_remediation" => $remediation,
+      "RowMenu_command" => $command,
       "RowMenu_rationale" => $values[$j]['rationale'],
       "RowMenu_description" => $values[$j]['description'],
       "RowMenu_result" => $values[$j]['result'],
@@ -237,8 +243,7 @@ $tpl->display("wazuh-sca.ihtml");
       : $style = "one";
   }
   $elemArrLength = count($elemArr);
-
-
+  $nbPage = intval($elemArrLength/$pageSize + 1);
   $attrBtnSuccess = array(
     "class" => "btc bt_success",
   );
@@ -248,6 +253,7 @@ $tpl->display("wazuh-sca.ihtml");
   $tpl->assign("elemArrLength", $elemArrLength);
   $tpl->assign("pageSize", $pageSize);
   $tpl->assign("curPage", $curPage);
+  $tpl->assign("nbPage", $nbPage);
 
   $tpl->assign("headerMenu_title", _("Title"));
   $tpl->assign("headerMenu_description", _("Description"));

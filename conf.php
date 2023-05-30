@@ -8,7 +8,7 @@ $module_conf[$moduleName] = [
     // Module's version
     'mod_release' => '21.04',
     // Additional information
-    'infos' => 'Centreon wazuh module its a webhook to supervise wazuh agent',
+    'infos' => 'Centreon wazuh module its a module to get information about wazuh agent.',
     // Allow your module to be uninstalled
     'is_removeable' => '1',
     // Module author's name

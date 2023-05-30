@@ -57,11 +57,8 @@ function get_vulnerabilities($wazuh_url, $token, $agent_id, $severity){
 
 function get_syscheck($wazuh_url, $token, $agent_id, $type){
   $ch = curl_init();
-  $wazuh_url_syscheck = $wazuh_url."/syscheck/".$agent_id."?limit=100000";
-  if($type != "all"){
-    $wazuh_url_syscheck = $wazuh_url_syscheck . "&q=type=" . $type;
-  }
-
+  $wazuh_url_syscheck = $wazuh_url."/syscheck/".$agent_id."?limit=100000". "&q=type=" . $type;
+  
   // Définir l'URL et les options appropriées
   curl_setopt($ch, CURLOPT_URL, $wazuh_url_syscheck); // URL de l'API
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -31,7 +31,7 @@ while ($row = $res->fetch()) {
 
 [$token, $status_code] = authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url);
 if($status_code!=200){
-  echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+  echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
   exit();
 }
 
@@ -88,7 +88,7 @@ $attrMapElementStatus = array(
 );
 $form->addElement('select2', "page", _("Page"), $nbElementFilter, $attrMapElementStatus);
 
-$typeFilter = array("all","file","registry_key","registry_value");
+$typeFilter = array("file","registry_key","registry_value");
 $typeDefault = array($typeFilter[0] => -1);
 if ($typeSizeIndex!==null) {
   $typeDefault = $typeSizeIndex == -1 ? array($typeFilter[0] => $typeSizeIndex) : array($typeFilter[$typeSizeIndex] => $typeSizeIndex);
@@ -111,7 +111,7 @@ if($valeurSelect !== null){
 
   [$values, $status_code] = get_syscheck($wazuh_url, $token, $agentid, key($typeDefault));
   if($status_code!=200){
-    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration.') . '</div>';
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
     exit();
   }
   $style = "one";
@@ -125,7 +125,7 @@ if($valeurSelect !== null){
       "RowMenu_changes" => $values[$j]['changes'],
       "RowMenu_uname" => $values[$j]['uname'],
       "RowMenu_perm" => $values[$j]['perm'],
-      "RowMenu_date" => $values[$j]['date'],
+      "RowMenu_date" => $values[$j]['mtime'],
     );
   
     $style != "two"
@@ -135,7 +135,7 @@ if($valeurSelect !== null){
 }
 
 $elemArrLength = count($elemArr);
-
+$nbPage = intval($elemArrLength/$pageSize + 1);
 
 $attrBtnSuccess = array(
   "class" => "btc bt_success",
@@ -146,6 +146,7 @@ $tpl->assign("elemArr", $elemArr);
 $tpl->assign("elemArrLength", $elemArrLength);
 $tpl->assign("pageSize", $pageSize);
 $tpl->assign("curPage", $curPage);
+$tpl->assign("nbPage", $nbPage);
 
 $tpl->assign("headerMenu_file", _("File"));
 $tpl->assign("headerMenu_type", _("Type"));

@@ -76,7 +76,19 @@
         </td>
       </tr>
       <tr>
-        <td style="padding-top: 4px;">{$form.SearchB.html}</td>        
+        <td style="padding-top: 4px;">{$form.SearchB.html}</td>     
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td> 
+        <td>
+          <p style="padding-bottom:4px; font-weight:700;">Nombre de pages: {$nbPage}</p>
+          <p style="padding-bottom:4px; font-weight:700;" id="page_act"></p>
+        </td>      
       </tr>
     </table>
   </div>
@@ -118,6 +130,7 @@
 var nbRows = {$elemArrLength};
 var pageSize = {$pageSize};
 var curPage = {$curPage};
+document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
 </script>
 
 
@@ -144,12 +157,16 @@ function renderTable() {
 document.querySelector('#nextButton').addEventListener('click', function(event){
   event.preventDefault();
   if((curPage * pageSize) < nbRows) curPage++;
+  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+
   renderTable();
 });
 
 document.querySelector('#prevButton').addEventListener('click',function(event){
   event.preventDefault();
   if(curPage > 1) curPage--;
+  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+
   renderTable();
 
 });
@@ -194,7 +211,6 @@ severityHeader.addEventListener("click", function() {
   
   // Trier les lignes en fonction de la colonne "severity"
   rows.sort(function(a, b) {
-    console.log(a)
     var severityOrder = ["critical", "high", "medium", "low", "untriaged"];
     var severityCellA = a.querySelector(".severity").innerHTML.toLowerCase();
     var severityCellB = b.querySelector(".severity").innerHTML.toLowerCase();
