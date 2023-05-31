@@ -8,7 +8,7 @@ require_once('requests.php');
 
 $path = './modules/centreon-wazuh/';
 
-/* Read module options */
+// Récupération des valeurs de configuration pour la connexion à l'API Wazuh
 $query = 'SELECT `key`, `value` FROM `options` '
     . 'WHERE `key` IN '
     . '("centreon_wazuh_manager_user", "centreon_wazuh_manager_password", "centreon_wazuh_manager_url")';
@@ -29,6 +29,7 @@ while ($row = $res->fetch()) {
     }
 }
 
+// Authentification et récupération du token
 [$token, $status_code] = authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url);
 if($status_code!=200){
   echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
@@ -36,11 +37,12 @@ if($status_code!=200){
 }
 
 
-// Traiter la réponse
+// Récupération des hôtes ayant une macro HOSTWAZUHAGENTID
 $valeurSelect = null;
 $dbResult = $pearDB->query("SELECT host_name, host_id, host_register from host where host_register='1' and host_id in ( select host_host_id from on_demand_macro_host where host_macro_name = \"\$_HOSTWAZUHAGENTID$\")");
 $totalRows = $dbResult->rowCount();
 
+// Création du formulaire de la page
 $form = new HTML_QuickFormCustom('form', 'post', "?p=".$p);
 $tpl = new Smarty();
 $tpl = initSmartyTpl($path, $tpl);
@@ -52,13 +54,14 @@ $attrMapStatus = null;
 $pageSize = 20;
 $curPage = 1;
 
+// Récupération des valeurs POST si il y en a
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $valeurSelect = $_POST["host"];
   $pageSizeIndex = $_POST["page"];
   $severitySizeIndex = $_POST["severityFilter"];
 }
 
-
+// Création du menu déroulant pour les hôtes
 $i = 1;
 while ($group = $dbResult->fetch()) {  
   $hostFilter[$i] = $group['host_name'];
@@ -76,29 +79,30 @@ while ($group = $dbResult->fetch()) {
   $i++;
 }
 
+// Création du menu déroulant pour le nombre d'éléments par page à afficher
 $nbElementFilter = array(10,20,30,40,50,60,70,80,90,100);
 $pageDefault = array($nbElementFilter[1] => 1);
 if ($pageSizeIndex!==null) {
   $pageDefault = $pageSizeIndex == -1 ? array($nbElementFilter[0] => $pageSizeIndex) : array($nbElementFilter[$pageSizeIndex] => $pageSizeIndex);
   $pageSize = $pageSizeIndex == -1 ? $nbElementFilter[0] : $nbElementFilter[$pageSizeIndex];
 }
-
 $attrMapElementStatus = array(
   'defaultDataset' => $pageDefault
 );
 $form->addElement('select2', "page", _("Page"), $nbElementFilter, $attrMapElementStatus);
 
 
+// Création du menu déroulant permettant de filtrer sur la sévérité 
 $severityFilter = array("all","critical","high","medium","low","untriaged");
 $severityDefault = array($severityFilter[0] => -1);
 if ($severitySizeIndex!==null) {
   $severityDefault = $severitySizeIndex == -1 ? array($severityFilter[0] => $severitySizeIndex) : array($severityFilter[$severitySizeIndex] => $severitySizeIndex);
 }
-
 $attrMapSeverityStatus = array(
   'defaultDataset' => $severityDefault
 );
 $form->addElement('select2', "severityFilter", _("Severity"), $severityFilter, $attrMapSeverityStatus);
+
 
 $values = array();
 $elemArr = array();
@@ -107,20 +111,25 @@ $nbCritical = 0;
 $nbMedium = 0;
 $nbHigh = 0;
 $nbUntriaged = 0;
+// Si hôte sélectionné
 if($valeurSelect !== null){
+  // Récupération des macros de l'hôte sélectionné
   $hostname = $hostFilter[$valeurSelect];
   $dbResult = $pearDB->query("SELECT o.host_macro_name, o.host_macro_value from host h, on_demand_macro_host o where h.host_id=o.host_host_id and o.host_macro_name='\$_HOSTWAZUHAGENTID$' and h.host_name='".$hostname."'");
 
+  // Récupération de l'agent wazuh ID
   while($host = $dbResult->fetch()){
     $agentid = $host["host_macro_value"];
   }
 
+  // Récupération de l'ensemble des vulnérabilités de l'agent
   [$values, $status_code] = get_vulnerabilities($wazuh_url, $token, $agentid, key($severityDefault));
   if($status_code!=200){
     echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
     exit();
   }
   $style = "one";
+  // Calcul du nombre de vulnarabilités pour chaque sévérité
   for ($j = 0; $j < count($values); $j++) {
     switch (strtolower($values[$j]['severity'])) {
       case 'low':
@@ -150,6 +159,7 @@ if($valeurSelect !== null){
         break;
     }
 
+    // Ajout de l'élément dans le tableau final 
     if(strtolower(key($severityDefault)) == "all" || strtolower(key($severityDefault))==strtolower($values[$j]['severity'])){
       $elemArr[$j] = array(
         "MenuClass" => "list_" . $style,
@@ -175,6 +185,7 @@ if($valeurSelect !== null){
 $elemArrLength = count($elemArr);
 $nbPage = intval($elemArrLength/$pageSize + 1);
 
+// Appel du template ihtml et passage des différentes valeurs
 $attrBtnSuccess = array(
   "class" => "btc bt_success",
 );

@@ -10,6 +10,7 @@ $path = './modules/centreon-wazuh/';
 $attrsTextLong = array("size" => "50");
 $attrsTextVeryLong = array("size" => "200");
 
+// Création du formulaire de configuration avec les différents champs
 $form = new HTML_QuickFormCustom('Form', 'post', '?p=' . $p);
 $form->addElement('header', 'title', _('Centreon Wazuh configuration'));
 $form->addElement('text', 'centreon_wazuh_manager_url', _('Wazuh URL'), $attrsTextVeryLong);
@@ -19,6 +20,7 @@ $form->addElement('text', 'centreon_wazuh_manager_password', _('Wazuh password')
 $form->addElement('submit', 'submitC', _("Save"));
 $form->addElement('reset', 'reset', _("Reset"));
 
+// Validation du formulaire => enregistrement des valeurs dans la DB
 if ($form->validate()) {
     $values = $form->getSubmitValues();
     $queryInsert = 'UPDATE `options` SET `value` = "%s" WHERE `key` = "%s"';
@@ -28,6 +30,7 @@ if ($form->validate()) {
 
 }
 
+// Récupération des valeurs par défaut
 if (!isset($values)) {
   $values = array();
   $query = 'SELECT `key`, `value` FROM `options` '

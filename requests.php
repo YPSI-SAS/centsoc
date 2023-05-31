@@ -1,5 +1,6 @@
 <?php
 
+// Authentification à l'API Wazuh et récupération du token
 function authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url){
   $ch = curl_init();
 
@@ -27,6 +28,7 @@ function authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url){
   return [$token, $status_code];
 }
 
+// Récupération des vulnérabilités sur un agent
 function get_vulnerabilities($wazuh_url, $token, $agent_id, $severity){
   $ch = curl_init();
   $wazuh_url_vulnerability = $wazuh_url."/vulnerability/".$agent_id."?limit=100000&select=condition,title,cve,severity,type,cvss3_score,detection_time";
@@ -55,6 +57,7 @@ function get_vulnerabilities($wazuh_url, $token, $agent_id, $severity){
   return [$values, $status_code];
 }
 
+// Récupération des informations d'intégrité de fichiers sur un agent
 function get_syscheck($wazuh_url, $token, $agent_id, $type){
   $ch = curl_init();
   $wazuh_url_syscheck = $wazuh_url."/syscheck/".$agent_id."?limit=100000". "&q=type=" . $type;
@@ -80,6 +83,7 @@ function get_syscheck($wazuh_url, $token, $agent_id, $type){
   return [$values, $status_code];
 }
 
+// Récupération des policy sur un agent
 function get_sca($wazuh_url, $token, $agent_id){
   $ch = curl_init();
   $wazuh_url_sca = $wazuh_url."/sca/".$agent_id."?limit=100000";
@@ -105,6 +109,7 @@ function get_sca($wazuh_url, $token, $agent_id){
   return [$values, $status_code];
 }
 
+// Récupération du détail d'une policy d'un agent
 function get_sca_policy($wazuh_url, $token, $agent_id, $policy_id, $result){
   $ch = curl_init();
   $wazuh_url_sca = $wazuh_url."/sca/".$agent_id."/checks/".$policy_id."?limit=100000";
