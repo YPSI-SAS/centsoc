@@ -92,7 +92,10 @@
       </tr>
     </table>
   </div>
-  
+  <div>
+    <p style="padding-bottom:4px; font-weight:700;">Dernière vérification complète: {$lastFullScan}</p>
+    <p style="padding-bottom:4px; font-weight:700;">Dernière vérification partielle: {$lastPartialScan}</p>
+  </div>
   <table class="ListTable" id="myTable" style="margin-top: 30px;">
 		<tr class="ListHeader">
 			<th class="ListColHeaderCenter">{$headerMenu_cve}</th>

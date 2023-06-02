@@ -39,8 +39,8 @@ if($status_code!=200){
 // Vérification si c'est la page de base sans policy sélectionné
 if(!isset($_GET['policy_id'])) {
   // Récupération des hôtes ayant une macro HOSTWAZUHAGENTID
-  $valeurSelect = null;
-  $dbResult = $pearDB->query("SELECT host_name, host_id, host_register from host where host_register='1' and host_id in ( select host_host_id from on_demand_macro_host where host_macro_name = \"\$_HOSTWAZUHAGENTID$\")");
+  $valeurSelectIndex = null;
+  $dbResult = $pearDB->query("SELECT h.host_name, h.host_id, h.host_register, o.host_macro_value from host h join on_demand_macro_host o on h.host_id=o.host_host_id where host_register='1' and o.host_macro_name = \"\$_HOSTWAZUHAGENTID$\"");
   $totalRows = $dbResult->rowCount();
 
   // Création du formulaire de la page
@@ -57,7 +57,7 @@ if(!isset($_GET['policy_id'])) {
   
   // Récupération des valeurs POST si il y en a
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $valeurSelect = $_POST["host"];
+    $valeurSelectIndex = $_POST["host"];
     $pageSizeIndex = $_POST["page"];
   }
 
@@ -76,12 +76,12 @@ if(!isset($_GET['policy_id'])) {
   // Création du menu déroulant pour les hôtes
   $i = 1;
   while ($group = $dbResult->fetch()) {  
-    $hostFilter[$i] = $group['host_name'];
+    $hostFilter[$i] = $group['host_macro_value'] . " - " . $group['host_name'];
     if($i===$totalRows){
       $statusDefault = '';
       $attrMapStatus = null;
-      if ($valeurSelect!==null) {
-        $statusDefault = array($hostFilter[$valeurSelect] => $valeurSelect);
+      if ($valeurSelectIndex!==null) {
+        $statusDefault = array($hostFilter[$valeurSelectIndex] => $valeurSelectIndex);
       }
       $attrMapStatus = array(
           'defaultDataset' => $statusDefault
@@ -96,15 +96,12 @@ if(!isset($_GET['policy_id'])) {
   $elemArr = array();
 
   // Si hôte sélectionné
-  if($valeurSelect !== null){
+  if($valeurSelectIndex !== null){
     // Récupération des macros de l'hôte sélectionné
-    $hostname = $hostFilter[$valeurSelect];
-    $dbResult = $pearDB->query("SELECT o.host_macro_name, o.host_macro_value from host h, on_demand_macro_host o where h.host_id=o.host_host_id and o.host_macro_name='\$_HOSTWAZUHAGENTID$' and h.host_name='".$hostname."'");
-
-    // Récupération de l'agent wazuh ID
-    while($host = $dbResult->fetch()){
-      $agentid = $host["host_macro_value"];
-    }
+    $valeurSelect = $hostFilter[$valeurSelectIndex];
+    $valeurSelectExplode = explode(" - ", $valeurSelect);
+    $hostname = $valeurSelectExplode[1];
+    $agentid = $valeurSelectExplode[0];
 
     // Récupération de l'ensemble des policy de l'agent
     [$values, $status_code] = get_sca($wazuh_url, $token, $agentid);

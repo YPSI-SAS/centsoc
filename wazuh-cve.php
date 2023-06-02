@@ -38,8 +38,8 @@ if($status_code!=200){
 
 
 // Récupération des hôtes ayant une macro HOSTWAZUHAGENTID
-$valeurSelect = null;
-$dbResult = $pearDB->query("SELECT host_name, host_id, host_register from host where host_register='1' and host_id in ( select host_host_id from on_demand_macro_host where host_macro_name = \"\$_HOSTWAZUHAGENTID$\")");
+$valeurSelectIndex = null;
+$dbResult = $pearDB->query("SELECT h.host_name, h.host_id, h.host_register, o.host_macro_value from host h join on_demand_macro_host o on h.host_id=o.host_host_id where host_register='1' and o.host_macro_name = \"\$_HOSTWAZUHAGENTID$\"");
 $totalRows = $dbResult->rowCount();
 
 // Création du formulaire de la page
@@ -56,7 +56,7 @@ $curPage = 1;
 
 // Récupération des valeurs POST si il y en a
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $valeurSelect = $_POST["host"];
+  $valeurSelectIndex = $_POST["host"];
   $pageSizeIndex = $_POST["page"];
   $severitySizeIndex = $_POST["severityFilter"];
 }
@@ -64,12 +64,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Création du menu déroulant pour les hôtes
 $i = 1;
 while ($group = $dbResult->fetch()) {  
-  $hostFilter[$i] = $group['host_name'];
+  $hostFilter[$i] = $group['host_macro_value'] . " - " . $group['host_name'];
   if($i===$totalRows){
     $statusDefault = '';
     $attrMapStatus = null;
-    if ($valeurSelect!==null) {
-      $statusDefault = array($hostFilter[$valeurSelect] => $valeurSelect);
+    if ($valeurSelectIndex!==null) {
+      $statusDefault = array($hostFilter[$valeurSelectIndex] => $valeurSelectIndex);
     }
     $attrMapStatus = array(
         'defaultDataset' => $statusDefault
@@ -112,15 +112,12 @@ $nbMedium = 0;
 $nbHigh = 0;
 $nbUntriaged = 0;
 // Si hôte sélectionné
-if($valeurSelect !== null){
+if($valeurSelectIndex !== null){
   // Récupération des macros de l'hôte sélectionné
-  $hostname = $hostFilter[$valeurSelect];
-  $dbResult = $pearDB->query("SELECT o.host_macro_name, o.host_macro_value from host h, on_demand_macro_host o where h.host_id=o.host_host_id and o.host_macro_name='\$_HOSTWAZUHAGENTID$' and h.host_name='".$hostname."'");
-
-  // Récupération de l'agent wazuh ID
-  while($host = $dbResult->fetch()){
-    $agentid = $host["host_macro_value"];
-  }
+  $valeurSelect = $hostFilter[$valeurSelectIndex];
+  $valeurSelectExplode = explode(" - ", $valeurSelect);
+  $hostname = $valeurSelectExplode[1];
+  $agentid = $valeurSelectExplode[0];
 
   // Récupération de l'ensemble des vulnérabilités de l'agent
   [$values, $status_code] = get_vulnerabilities($wazuh_url, $token, $agentid, key($severityDefault));
@@ -180,6 +177,14 @@ if($valeurSelect !== null){
       ? $style = "two"
       : $style = "one";
   }
+
+  [$values, $status_code] = get_vulnerability_last_scan($wazuh_url, $token, $agentid);
+  if($status_code!=200){
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code . '</div>';
+    exit();
+  }
+  $last_full_scan = $values[0]['last_full_scan'];
+  $last_partial_scan = $values[0]['last_partial_scan'];
 }
 
 $elemArrLength = count($elemArr);
@@ -196,6 +201,9 @@ $tpl->assign("elemArrLength", $elemArrLength);
 $tpl->assign("pageSize", $pageSize);
 $tpl->assign("curPage", $curPage);
 $tpl->assign("nbPage", $nbPage);
+
+$tpl->assign("lastFullScan", $last_full_scan);
+$tpl->assign("lastPartialScan", $last_partial_scan);
 
 $tpl->assign("nbCritical", $nbCritical);
 $tpl->assign("nbLow", $nbLow);
