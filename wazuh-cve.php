@@ -6,7 +6,7 @@ if (!isset($centreon)) {
 
 require_once('requests.php');
 
-$path = './modules/centreon-wazuh/';
+$path = './modules/centreon-module-wazuh/';
 
 // Récupération des valeurs de configuration pour la connexion à l'API Wazuh
 $query = 'SELECT `key`, `value` FROM `options` '
