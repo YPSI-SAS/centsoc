@@ -103,11 +103,11 @@
 		<tr class="ListHeader">
 			<th class="ListColHeaderCenter">{$headerMenu_cve}</th>
 			<th class="ListColHeaderCenter">{$headerMenu_condition}</th>
-			<th class="ListColHeaderCenter" id="severityHeader">{$headerMenu_severity}</th>
-			<th class="ListColHeaderCenter">{$headerMenu_title}</th>
+			<th class="ListColHeaderCenter" id="severityHeader">{$headerMenu_severity} ↕</th>
+			<th class="ListColHeaderCenter" id="titleHeader">{$headerMenu_title} ↕</th>
       <th class="ListColHeaderCenter">{$headerMenu_type}</th>
-			<th class="ListColHeaderCenter" id="scoreHeader">{$headerMenu_cvss3_score}</th>
-			<th class="ListColHeaderCenter">{$headerMenu_detection}</th>
+			<th class="ListColHeaderCenter" id="scoreHeader">{$headerMenu_cvss3_score} ↕</th>
+			<th class="ListColHeaderCenter" id="dateHeader">{$headerMenu_detection} ↕</th>
 		</tr>
 		{section name=elem loop=$elemArr}
 		<tr class={$elemArr[elem].MenuClass}>
@@ -123,7 +123,7 @@
 			<td class="ListColCenter title">{$elemArr[elem].RowMenu_title}</td>
 			<td class="ListColCenter">{$elemArr[elem].RowMenu_type}</td>
 			<td class="ListColCenter score">{$elemArr[elem].RowMenu_cvss3_score}</td>
-			<td class="ListColCenter">{$elemArr[elem].RowMenu_detection}</td>
+			<td class="ListColCenter date">{$elemArr[elem].RowMenu_detection}</td>
 		</tr>
 		{/section}	
 	</table>
@@ -248,6 +248,59 @@ var searchInputCVE = document.getElementById("searchInputCVE");
 searchInputCVE.addEventListener("input", function() {
   var searchText = searchInputCVE.value.toLowerCase();
   checkText(searchText, ".cve");
+});
+
+// Récupérer la référence à l'en-tête de la colonne "severity"
+var dateHeader = document.getElementById("dateHeader");
+
+// Ajouter un écouteur d'événement au clic sur l'en-tête de la colonne "severity"
+dateHeader.addEventListener("click", function() {
+  
+  // Récupérer la référence à la table
+  var table = document.getElementById("myTable");
+
+  // Récupérer toutes les lignes du tableau, sauf l'en-tête
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  
+  // Trier les lignes en fonction de la colonne "severity"
+  rows.sort(function(a, b) {
+    var dateCellA = new Date(a.querySelector(".date").innerHTML);
+    var dateCellB = new Date(b.querySelector(".date").innerHTML);
+    return dateCellB - dateCellA;
+  });
+
+  // Réorganiser les lignes dans le tableau
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+  
+  renderTable();
+});
+
+// Récupérer la référence à l'en-tête de la colonne "title"
+var titleHeader = document.getElementById("titleHeader");
+
+// Ajouter un écouteur d'événement au clic sur l'en-tête de la colonne "title"
+titleHeader.addEventListener("click", function() {
+  
+  // Récupérer la référence à la table
+  var table = document.getElementById("myTable");
+
+  // Récupérer toutes les lignes du tableau, sauf l'en-tête
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  
+  // Trier les lignes en fonction de la colonne "title"
+  rows.sort(function(a, b) {
+    var titleCellA = a.querySelector(".title").innerHTML.toLowerCase();
+    var titleCellB = b.querySelector(".title").innerHTML.toLowerCase();
+    return titleCellA.localeCompare(titleCellB);
+  });
+
+  // Réorganiser les lignes dans le tableau
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+  renderTable();
 });
 
 </script>

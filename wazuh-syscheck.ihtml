@@ -59,13 +59,13 @@
   </form>
   <table class="ListTable" id="myTable" style="margin-top: 30px;">
 		<tr class="ListHeader">
-			<th class="ListColHeaderCenter">{$headerMenu_file}</th>
+			<th class="ListColHeaderCenter" id="fileHeader">{$headerMenu_file} ↕</th>
 			<th class="ListColHeaderCenter">{$headerMenu_type}</th>
-			<th class="ListColHeaderCenter" id="sizeHeader">{$headerMenu_size}</th>
+			<th class="ListColHeaderCenter" id="sizeHeader">{$headerMenu_size} ↕</th>
 			<th class="ListColHeaderCenter">{$headerMenu_uname}</th>
       <th class="ListColHeaderCenter">{$headerMenu_gname}</th>
 			<th class="ListColHeaderCenter">{$headerMenu_perm}</th>
-      <th class="ListColHeaderCenter" id="dateHeader">{$headerMenu_date}</th>
+      <th class="ListColHeaderCenter" id="dateHeader">{$headerMenu_date} ↕</th>
 		</tr>
 		{section name=elem loop=$elemArr}
       <td class="ListColCenter file">{$elemArr[elem].RowMenu_file}</td>
@@ -189,6 +189,32 @@ var searchInput = document.getElementById("searchInput");
 searchInput.addEventListener("input", function() {
   var searchText = searchInput.value.toLowerCase();
   checkText(searchText, ".file");
+});
+
+// Récupérer la référence à l'en-tête de la colonne "file"
+var fileHeader = document.getElementById("fileHeader");
+
+// Ajouter un écouteur d'événement au clic sur l'en-tête de la colonne "file"
+fileHeader.addEventListener("click", function() {
+  
+  // Récupérer la référence à la table
+  var table = document.getElementById("myTable");
+
+  // Récupérer toutes les lignes du tableau, sauf l'en-tête
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  
+  // Trier les lignes en fonction de la colonne "file"
+  rows.sort(function(a, b) {
+    var fileCellA = a.querySelector(".file").innerHTML.toLowerCase();
+    var fileCellB = b.querySelector(".file").innerHTML.toLowerCase();
+    return fileCellA.localeCompare(fileCellB);
+  });
+
+  // Réorganiser les lignes dans le tableau
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+  renderTable();
 });
 
 </script>

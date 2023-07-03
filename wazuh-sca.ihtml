@@ -46,8 +46,8 @@
   
   <table class="ListTable" id="myTable" style="margin-top: 30px;">
 		<tr class="ListHeader">
-			<th class="ListColHeaderCenter">{$headerMenu_name}</th>
-			<th class="ListColHeaderCenter" id="dateHeader">{$headerMenu_scan}</th>
+			<th class="ListColHeaderCenter" id="policyHeader">{$headerMenu_name} ↕</th>
+			<th class="ListColHeaderCenter" id="dateHeader">{$headerMenu_scan} ↕</th>
 			<th class="ListColHeaderCenter">{$headerMenu_fail}</th>
       <th class="ListColHeaderCenter">{$headerMenu_pass}</th>
 			<th class="ListColHeaderCenter">{$headerMenu_invalid}</th>
@@ -146,6 +146,59 @@ var searchInput = document.getElementById("searchInput");
 searchInput.addEventListener("input", function() {
   var searchText = searchInput.value.toLowerCase();
   checkText(searchText, ".policy");
+});
+
+// Récupérer la référence à l'en-tête de la colonne "severity"
+var dateHeader = document.getElementById("dateHeader");
+
+// Ajouter un écouteur d'événement au clic sur l'en-tête de la colonne "severity"
+dateHeader.addEventListener("click", function() {
+  
+  // Récupérer la référence à la table
+  var table = document.getElementById("myTable");
+
+  // Récupérer toutes les lignes du tableau, sauf l'en-tête
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  
+  // Trier les lignes en fonction de la colonne "severity"
+  rows.sort(function(a, b) {
+    var dateCellA = new Date(a.querySelector(".date").innerHTML);
+    var dateCellB = new Date(b.querySelector(".date").innerHTML);
+    return dateCellB - dateCellA;
+  });
+
+  // Réorganiser les lignes dans le tableau
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+  
+  renderTable();
+});
+
+// Récupérer la référence à l'en-tête de la colonne "policy"
+var policyHeader = document.getElementById("policyHeader");
+
+// Ajouter un écouteur d'événement au clic sur l'en-tête de la colonne "policy"
+policyHeader.addEventListener("click", function() {
+  
+  // Récupérer la référence à la table
+  var table = document.getElementById("myTable");
+
+  // Récupérer toutes les lignes du tableau, sauf l'en-tête
+  var rows = Array.from(table.getElementsByTagName("tr")).slice(1);
+  
+  // Trier les lignes en fonction de la colonne "policy"
+  rows.sort(function(a, b) {
+    var policyCellA = a.querySelector(".policy").innerHTML.toLowerCase();
+    var policyCellB = b.querySelector(".policy").innerHTML.toLowerCase();
+    return policyCellA.localeCompare(policyCellB);
+  });
+
+  // Réorganiser les lignes dans le tableau
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+  renderTable();
 });
 
 </script>
