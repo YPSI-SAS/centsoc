@@ -85,7 +85,7 @@ function get_vulnerability_last_scan($wazuh_url, $token, $agent_id){
 // Récupération des informations d'intégrité de fichiers sur un agent
 function get_syscheck($wazuh_url, $token, $agent_id, $type){
   $ch = curl_init();
-  $wazuh_url_syscheck = $wazuh_url."/syscheck/".$agent_id."?limit=100000". "&q=type=" . $type;
+  $wazuh_url_syscheck = $wazuh_url."/syscheck/".$agent_id."?limit=100000". "&q=type=" . $type . "&select=type,file,size,uname,gname,perm,mtime";
   
   // Définir l'URL et les options appropriées
   curl_setopt($ch, CURLOPT_URL, $wazuh_url_syscheck); // URL de l'API

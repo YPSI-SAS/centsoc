@@ -129,7 +129,6 @@ if($valeurSelectIndex !== null){
       "RowMenu_type" => $values[$j]['type'],
       "RowMenu_size" => $values[$j]['size'],
       "RowMenu_gname" => $values[$j]['gname'],
-      "RowMenu_changes" => $values[$j]['changes'],
       "RowMenu_uname" => $values[$j]['uname'],
       "RowMenu_perm" => $values[$j]['perm'],
       "RowMenu_date" => $values[$j]['mtime'],
@@ -171,7 +170,6 @@ $tpl->assign("headerMenu_file", _("File"));
 $tpl->assign("headerMenu_type", _("Type"));
 $tpl->assign("headerMenu_size", _("Size (bytes)"));
 $tpl->assign("headerMenu_gname", _("Group"));
-$tpl->assign("headerMenu_changes", _("Changes"));
 $tpl->assign("headerMenu_uname", _("Owner"));
 $tpl->assign("headerMenu_perm", _("Perm"));
 $tpl->assign("headerMenu_date", _("Date"));

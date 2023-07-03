@@ -59,7 +59,6 @@
 			<th class="ListColHeaderCenter">{$headerMenu_file}</th>
 			<th class="ListColHeaderCenter">{$headerMenu_type}</th>
 			<th class="ListColHeaderCenter" id="sizeHeader">{$headerMenu_size}</th>
-      <th class="ListColHeaderCenter">{$headerMenu_changes}</th>
 			<th class="ListColHeaderCenter">{$headerMenu_uname}</th>
       <th class="ListColHeaderCenter">{$headerMenu_gname}</th>
 			<th class="ListColHeaderCenter">{$headerMenu_perm}</th>
@@ -69,7 +68,6 @@
       <td class="ListColCenter file">{$elemArr[elem].RowMenu_file}</td>
       <td class="ListColCenter">{$elemArr[elem].RowMenu_type}</td>
 			<td class="ListColCenter size">{$elemArr[elem].RowMenu_size}</td>
-			<td class="ListColCenter">{$elemArr[elem].RowMenu_changes}</td>
 			<td class="ListColCenter">{$elemArr[elem].RowMenu_uname}</td>
       <td class="ListColCenter">{$elemArr[elem].RowMenu_gname}</td>
 			<td class="ListColCenter">{$elemArr[elem].RowMenu_perm}</td>
