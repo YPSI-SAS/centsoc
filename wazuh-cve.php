@@ -50,12 +50,24 @@ $renderer = new HTML_QuickForm_Renderer_ArraySmarty($tpl);
 
 $hostFilter = array();
 $attrMapStatus = null;
-
+$pageSizeIndex = null;
+$severitySizeIndex = null;
+$last_full_scan = null;
+$last_partial_scan = null;
 $pageSize = 20;
 $curPage = 1;
+$status_code_scan = 400;
 
-// Récupération des valeurs POST si il y en a
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if(array_key_exists('force_scan', $_POST)) {
+  $valeurSelectIndex = null;
+  $status_code_scan = put_vulnerabilies_run_scan($wazuh_url, $token);
+  if($status_code_scan!=200){
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code_scan . '</div>';
+    exit();
+  }
+}
+
+if(array_key_exists('host', $_POST) || array_key_exists('page', $_POST) || array_key_exists('severityFilter', $_POST)) {
   $valeurSelectIndex = $_POST["host"];
   $pageSizeIndex = $_POST["page"];
   $severitySizeIndex = $_POST["severityFilter"];
@@ -82,7 +94,7 @@ while ($group = $dbResult->fetch()) {
 // Création du menu déroulant pour le nombre d'éléments par page à afficher
 $nbElementFilter = array(10,20,30,40,50,60,70,80,90,100);
 $pageDefault = array($nbElementFilter[1] => 1);
-if ($pageSizeIndex!==null) {
+if ($pageSizeIndex!=null) {
   $pageDefault = $pageSizeIndex == -1 ? array($nbElementFilter[0] => $pageSizeIndex) : array($nbElementFilter[$pageSizeIndex] => $pageSizeIndex);
   $pageSize = $pageSizeIndex == -1 ? $nbElementFilter[0] : $nbElementFilter[$pageSizeIndex];
 }
@@ -95,7 +107,7 @@ $form->addElement('select2', "page", _("Page"), $nbElementFilter, $attrMapElemen
 // Création du menu déroulant permettant de filtrer sur la sévérité 
 $severityFilter = array("all","critical","high","medium","low","untriaged");
 $severityDefault = array($severityFilter[0] => -1);
-if ($severitySizeIndex!==null) {
+if ($severitySizeIndex!=null) {
   $severityDefault = $severitySizeIndex == -1 ? array($severityFilter[0] => $severitySizeIndex) : array($severityFilter[$severitySizeIndex] => $severitySizeIndex);
 }
 $attrMapSeverityStatus = array(
@@ -112,7 +124,7 @@ $nbMedium = 0;
 $nbHigh = 0;
 $nbUntriaged = 0;
 // Si hôte sélectionné
-if($valeurSelectIndex !== null){
+if($valeurSelectIndex != null){
   // Récupération des macros de l'hôte sélectionné
   $valeurSelect = $hostFilter[$valeurSelectIndex];
   $valeurSelectExplode = explode(" - ", $valeurSelect);
@@ -210,6 +222,8 @@ $tpl->assign("nbLow", $nbLow);
 $tpl->assign("nbHigh", $nbHigh);
 $tpl->assign("nbUntriaged", $nbUntriaged);
 $tpl->assign("nbMedium", $nbMedium);
+
+$tpl->assign("statusCodeScan",$status_code_scan);
 
 $tpl->assign("headerMenu_cve", _("CVE"));
 $tpl->assign("headerMenu_condition", _("Condition"));

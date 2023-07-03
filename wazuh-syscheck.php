@@ -50,12 +50,24 @@ $renderer = new HTML_QuickForm_Renderer_ArraySmarty($tpl);
 
 $hostFilter = array();
 $attrMapStatus = null;
-
+$pageSizeIndex = null;
+$typeSizeIndex = null;
+$last_scan_end = null;
+$last_scan_start = null;
 $pageSize = 20;
 $curPage = 1;
+$status_code_scan = 400;
 
-// Récupération des valeurs POST si il y en a
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if(array_key_exists('force_scan', $_POST)) {
+  $valeurSelectIndex = null;
+  $status_code_scan = put_syscheck_run_scan($wazuh_url, $token);
+  if($status_code_scan!=200){
+    echo '<div class="error">' . _('Error when requesting Wazuh API. Verify Wazuh configuration. Error: '). $status_code_scan . '</div>';
+    exit();
+  }
+}
+
+if(array_key_exists('host', $_POST) || array_key_exists('page', $_POST) || array_key_exists('typeFilter', $_POST)) {
   $valeurSelectIndex = $_POST["host"];
   $pageSizeIndex = $_POST["page"];
   $typeSizeIndex = $_POST["typeFilter"];
@@ -82,7 +94,7 @@ while ($group = $dbResult->fetch()) {
 // Création du menu déroulant pour le nombre d'éléments par page à afficher
 $nbElementFilter = array(10,20,30,40,50,60,70,80,90,100);
 $pageDefault = array($nbElementFilter[1] => 1);
-if ($pageSizeIndex!==null) {
+if ($pageSizeIndex!=null) {
   $pageDefault = $pageSizeIndex == -1 ? array($nbElementFilter[0] => $pageSizeIndex) : array($nbElementFilter[$pageSizeIndex] => $pageSizeIndex);
   $pageSize = $pageSizeIndex == -1 ? $nbElementFilter[0] : $nbElementFilter[$pageSizeIndex];
 }
@@ -94,7 +106,7 @@ $form->addElement('select2', "page", _("Page"), $nbElementFilter, $attrMapElemen
 // Création du menu déroulant permettant de filtrer sur le type 
 $typeFilter = array("file","registry_key","registry_value");
 $typeDefault = array($typeFilter[0] => -1);
-if ($typeSizeIndex!==null) {
+if ($typeSizeIndex!=null) {
   $typeDefault = $typeSizeIndex == -1 ? array($typeFilter[0] => $typeSizeIndex) : array($typeFilter[$typeSizeIndex] => $typeSizeIndex);
 }
 $attrMaptypeStatus = array(
@@ -106,7 +118,7 @@ $form->addElement('select2', "typeFilter", _("type"), $typeFilter, $attrMaptypeS
 $values = array();
 $elemArr = array();
 // Si hôte sélectionné
-if($valeurSelectIndex !== null){
+if($valeurSelectIndex != null){
   // Récupération des macros de l'hôte sélectionné
   $valeurSelect = $hostFilter[$valeurSelectIndex];
   $valeurSelectExplode = explode(" - ", $valeurSelect);
@@ -164,6 +176,7 @@ $tpl->assign("curPage", $curPage);
 $tpl->assign("nbPage", $nbPage);
 $tpl->assign("lastScanStart", $last_scan_start);
 $tpl->assign("lastScanEnd", $last_scan_end);
+$tpl->assign("statusCodeScan",$status_code_scan);
 
 
 $tpl->assign("headerMenu_file", _("File"));

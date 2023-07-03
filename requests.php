@@ -56,6 +56,29 @@ function get_vulnerabilities($wazuh_url, $token, $agent_id, $severity){
   }
   return [$values, $status_code];
 }
+
+function put_vulnerabilies_run_scan($wazuh_url, $token){
+  $ch = curl_init();
+  $wazuh_url_syscheck = $wazuh_url."/syscheck";
+
+  // Définir l'URL et les options appropriées
+  curl_setopt($ch, CURLOPT_URL, $wazuh_url_syscheck); // URL de l'API
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    "Authorization: Bearer " . $token,
+  ));
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  // Exécuter la requête et récupérer la réponse
+  $response = curl_exec($ch);
+  $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  // Fermer la session cURL
+  curl_close($ch);
+
+  return $status_code;
+}
+
 // Récupération la datetime de la dernière vérification de vulnérabilité sur un agent
 function get_vulnerability_last_scan($wazuh_url, $token, $agent_id){
   $ch = curl_init();
@@ -132,6 +155,28 @@ function get_syscheck_last_scan($wazuh_url, $token, $agent_id){
     $values = $json["data"]["affected_items"];
   }
   return [$values, $status_code];
+}
+
+function put_syscheck_run_scan($wazuh_url, $token){
+  $ch = curl_init();
+  $wazuh_url_vulnerability = $wazuh_url."/vulnerability";
+
+  // Définir l'URL et les options appropriées
+  curl_setopt($ch, CURLOPT_URL, $wazuh_url_vulnerability); // URL de l'API
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    "Authorization: Bearer " . $token,
+  ));
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+  // Exécuter la requête et récupérer la réponse
+  $response = curl_exec($ch);
+  $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  // Fermer la session cURL
+  curl_close($ch);
+
+  return $status_code;
 }
 
 // Récupération des policy sur un agent

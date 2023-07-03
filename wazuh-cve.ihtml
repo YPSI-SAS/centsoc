@@ -92,10 +92,13 @@
       </tr>
     </table>
   </div>
-  <div>
-    <p style="padding-bottom:4px; font-weight:700;">Dernière vérification complète: {$lastFullScan}</p>
-    <p style="padding-bottom:4px; font-weight:700;">Dernière vérification partielle: {$lastPartialScan}</p>
-  </div>
+  <form method="post">          
+    <input type="submit" name="force_scan" class="btc bt_success" value="Force scan" />
+    <div>
+      <p style="padding-bottom:4px; font-weight:700;">Dernière vérification complète: {$lastFullScan}</p>
+      <p style="padding-bottom:4px; font-weight:700;">Dernière vérification partielle: {$lastPartialScan}</p>
+    </div>
+  </form>
   <table class="ListTable" id="myTable" style="margin-top: 30px;">
 		<tr class="ListHeader">
 			<th class="ListColHeaderCenter">{$headerMenu_cve}</th>
@@ -134,11 +137,15 @@ var nbRows = {$elemArrLength};
 var pageSize = {$pageSize};
 var curPage = {$curPage};
 document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+var statusCodeScan = {$statusCodeScan};
 </script>
 
 
 {literal}
 <script type='text/javascript'>
+if(statusCodeScan==200){
+  alert("Scan successfully executed.");
+}
 
 renderTable();
 function renderTable() {
