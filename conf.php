@@ -1,5 +1,5 @@
 <?php
-$moduleName = 'centreon-module-wazuh';
+$moduleName = 'centsoc';
 $module_conf[$moduleName] = [
     // Short module's name. Must be equal to your module's directory name
     'name' => $moduleName,

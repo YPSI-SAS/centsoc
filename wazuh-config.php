@@ -5,7 +5,7 @@ if (!isset($oreon)) {
 }
 
 
-$path = './modules/centreon-module-wazuh/';
+$path = './modules/centsoc/';
 
 $attrsTextLong = array("size" => "50");
 $attrsTextVeryLong = array("size" => "200");

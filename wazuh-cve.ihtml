@@ -130,7 +130,7 @@
   {$form.hidden}
 </form>
 
-<script type='text/javascript' src="./modules/centreon-module-wazuh/utils.js"></script>
+<script type='text/javascript' src="./modules/centsoc/utils.js"></script>
 
 <script type='text/javascript'>
 var nbRows = {$elemArrLength};
