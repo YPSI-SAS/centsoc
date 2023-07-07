@@ -15,7 +15,7 @@ $form = new HTML_QuickFormCustom('Form', 'post', '?p=' . $p);
 $form->addElement('header', 'title', _('Centreon Wazuh configuration'));
 $form->addElement('text', 'centreon_wazuh_manager_url', _('Wazuh URL'), $attrsTextVeryLong);
 $form->addElement('text', 'centreon_wazuh_manager_user', _('Wazuh user login'), $attrsTextLong);
-$form->addElement('text', 'centreon_wazuh_manager_password', _('Wazuh password'), $attrsTextLong);
+$form->addElement('password', 'centreon_wazuh_manager_password', _('Wazuh password'), $attrsTextLong);
 
 $form->addElement('submit', 'submitC', _("Save"));
 $form->addElement('reset', 'reset', _("Reset"));
