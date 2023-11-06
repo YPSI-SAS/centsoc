@@ -9,8 +9,7 @@ function authentication($wazuh_user_login, $wazuh_user_mdp, $wazuh_url){
   curl_setopt($ch, CURLOPT_POST, 1); // Méthode POST
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Authorization: Basic " . base64_encode($wazuh_user_login.":".$wazuh_user_mdp),
-    "Content-Length: 0"
+    "Authorization: Basic " . base64_encode($wazuh_user_login.":".$wazuh_user_mdp)
   ));
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
