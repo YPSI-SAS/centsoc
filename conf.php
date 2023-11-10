@@ -4,7 +4,7 @@ $module_conf[$moduleName] = [
     // Short module's name. Must be equal to your module's directory name
     'name' => $moduleName,
     // Full module's name
-    'rname' => 'Wazuh Module',
+    'rname' => 'CentSOC',
     // Module's version
     'mod_release' => '21.04',
     // Additional information
