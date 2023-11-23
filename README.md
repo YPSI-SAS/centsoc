@@ -5,7 +5,13 @@ Il permet de récupérer les informations de file integrity (syscheck), de vuln�
 
 ## Installation
 
-Pour pouvoir utiliser ce module, positionnez le dossier centsoc dans le dossier: /usr/share/centreon/www/modules/ </br>
+Pour pouvoir utiliser ce module, connectez vous en SSH à votre serveur Centreon Central puis effectuez ces commandes
+
+```bash
+cd /usr/share/centreon/www/modules/
+git clone https://github.com/YPSI-SAS/centsoc
+```
+
 Puis, allez dans Administration > Extensions > Manager et activez le module "Wazuh Module".</br>
 
 Puis, vous pouvez renseigner les informations de connexion à votre manager wazuh dans le menu Administration > Wazuh > Wazuh Configuration </br>
