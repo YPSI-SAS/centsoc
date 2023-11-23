@@ -12,7 +12,7 @@ cd /usr/share/centreon/www/modules/
 git clone https://github.com/YPSI-SAS/centsoc
 ```
 
-Puis, allez dans Administration > Extensions > Manager et activez le module "Wazuh Module".</br>
+Puis, allez dans Administration > Extensions > Manager et activez le module "CentSOC".</br>
 
 Puis, vous pouvez renseigner les informations de connexion à votre manager wazuh dans le menu Administration > Wazuh > Wazuh Configuration </br>
 ![image](./images/configuration_wazuh.png)
