@@ -18,6 +18,24 @@ Puis, vous pouvez renseigner les informations de connexion à votre manager wazu
 ![image](./images/configuration_wazuh.png)
 ATTENTION: L'URL ne doit pas contenir de "/" à la fin !
 
+Ensuite, ajoutez sur au moins un hôte la macro WAZUHAGENTID avec pour valeur l'ID de l'agent Wazuh installé sur l'hôte correspondant
+![image](https://github.com/YPSI-SAS/centsoc/assets/58302496/6bca9805-e1bd-4a18-839b-bc083c678359)
+
+Vous pouvez lister les ID des agents Wazuh en vous connectant en SSH au Wazuh Manager et en exécutant la commande suivante
+
+```bash
+/var/ossec/bin/agent_control -l
+
+#Output:
+Wazuh agent_control. List of available agents:
+   ID: 000, Name: wazuh-manager (server), IP: 127.0.0.1, Active/Local
+   ID: 001, Name: host01, IP: any, Active
+   ID: 002, Name: host02, IP: any, Active
+   ID: 003, Name: host03, IP: any, Disconnected
+
+```
+
+
 Puis, vous pouvez consulter les différentes informations dans l'un des menus suivants. Les hôtes proposés sont tous les hôtes ayant une macro WAZUHAGENTID.
 
 ## Reporting > Wazuh > Vulnerabilities
