@@ -1,8 +1,5 @@
 # CentSOC
 
-Ce projet contient le code permettant d'exécuter des requêtes vers l'API de Wazuh sur un agent en particulier à partir d'un menu. </br>
-Il permet de récupérer les informations de file integrity (syscheck), de vulnérabilités (cve) et de SCA.
-
 CentSOC is a module for Centreon to add Wazuh last scans results to the Centreon UI through Wazuh Manager API
 With CentSOC, you can see vulnerabilities, SCA and Syscheck scans results
 
