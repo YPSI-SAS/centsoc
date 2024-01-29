@@ -7,13 +7,13 @@
           <h4>Host</h4>
         </td>
         <td>
-          <h4>Rechercher par policy</h4>
+          <h4>Search by policy</h4>
         </td>
         <td>
-          <p style="padding-bottom:4px; font-weight:700;" class="total-title">Total éléments: {$elemArrLength}</p>
+          <p style="padding-bottom:4px; font-weight:700;" class="total-title">Total elements: {$elemArrLength}</p>
         </td>
         <td>
-          <h4>Nombre d'éléments par page</h4>
+          <h4>Elements</h4>
         </td>
       </tr>
       <tr>
@@ -21,12 +21,12 @@
           {$form.host.html}
         </td>
         <td>
-          <input style="padding-top: 4px;" type="text" id="searchInput" placeholder="Renseignez un policy...">
+          <input style="padding-top: 4px;" type="text" id="searchInput" placeholder="Write a policy...">
         </td>
         <td>
           <div>
-            <button class="btc bt_success" id="prevButton">précédent</button> 
-            <button class="btc bt_success" id="nextButton">suivant</button> 
+            <button class="btc bt_success" id="prevButton">previous</button> 
+            <button class="btc bt_success" id="nextButton">next</button> 
           </div>
         </td>
         <td>
@@ -37,7 +37,7 @@
         <td style="padding-top: 4px;">{$form.SearchB.html}</td>      
         <td></td> 
         <td>
-          <p style="padding-bottom:4px; font-weight:700;">Nombre de pages: {$nbPage}</p>
+          <p style="padding-bottom:4px; font-weight:700;">Page count: {$nbPage}</p>
           <p style="padding-bottom:4px; font-weight:700;" id="page_act"></p>
         </td>   
       </tr>
@@ -73,7 +73,7 @@
 var nbRows = {$elemArrLength};
 var pageSize = {$pageSize};
 var curPage = {$curPage};
-document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+document.getElementById("page_act").innerHTML = "Current page: " + curPage;
 </script>
 
 
@@ -101,14 +101,14 @@ function renderTable() {
 document.querySelector('#nextButton').addEventListener('click', function(event){
   event.preventDefault();
   if((curPage * pageSize) < nbRows) curPage++;
-  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;  
+  document.getElementById("page_act").innerHTML = "Current page: " + curPage;  
   renderTable();
 });
 
 document.querySelector('#prevButton').addEventListener('click',function(event){
   event.preventDefault();
   if(curPage > 1) curPage--;
-  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+  document.getElementById("page_act").innerHTML = "Current page: " + curPage;
   renderTable();
 
 });

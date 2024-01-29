@@ -1,27 +1,46 @@
-# Centreon module Wazuh
+# CentSOC
 
 Ce projet contient le code permettant d'exécuter des requêtes vers l'API de Wazuh sur un agent en particulier à partir d'un menu. </br>
 Il permet de récupérer les informations de file integrity (syscheck), de vulnérabilités (cve) et de SCA.
 
+CentSOC is a module for Centreon to add Wazuh last scans results to the Centreon UI through Wazuh Manager API
+With CentSOC, you can see vulnerabilities, SCA and Syscheck scans results
+
+
+## Prerequisites
+
+To use CentSOC, you needs:
+- A Wazuh Manager server
+- At least one server with a Wazuh Agent installed
+- A Wazuh Manager API Account
+- A Centreon Central Server
+
 ## Installation
 
-Pour pouvoir utiliser ce module, connectez vous en SSH à votre serveur Centreon Central puis effectuez ces commandes
+Connect to your Centreon Central server's terminal and use this command</br>
 
 ```bash
 cd /usr/share/centreon/www/modules/
 git clone https://github.com/YPSI-SAS/centsoc
 ```
 
-Puis, allez dans Administration > Extensions > Manager et activez le module "CentSOC".</br>
 
-Puis, vous pouvez renseigner les informations de connexion à votre manager wazuh dans le menu Administration > Wazuh > Wazuh Configuration </br>
+Then, connect to your Centreon WebUI in Administration > Extensions > Manager menu and install CentSOC</br>
+
+
+Go to Administration > Wazuh > Wazuh Configuration and set Wazuh Manager Address and API Credentials</br>
+
 ![image](./images/configuration_wazuh.png)
-ATTENTION: L'URL ne doit pas contenir de "/" à la fin !
 
-Ensuite, ajoutez sur au moins un hôte la macro WAZUHAGENTID avec pour valeur l'ID de l'agent Wazuh installé sur l'hôte correspondant
+ATTENTION: Wazuh Manager URL must not contain "/" at the end !
+
+
+
+Before using CentSOC, you first need to set WAZUHAGENTID macro on at least one host, with the id of the Wazuh agent installed on the corresponding host</br>
 ![image](https://github.com/YPSI-SAS/centsoc/assets/58302496/6bca9805-e1bd-4a18-839b-bc083c678359)
 
-Vous pouvez lister les ID des agents Wazuh en vous connectant en SSH au Wazuh Manager et en exécutant la commande suivante
+
+You can list Wazuh Agents IDs on the Wazuh Manager with the next command:
 
 ```bash
 /var/ossec/bin/agent_control -l
@@ -36,30 +55,30 @@ Wazuh agent_control. List of available agents:
 ```
 
 
-Puis, vous pouvez consulter les différentes informations dans l'un des menus suivants. Les hôtes proposés sont tous les hôtes ayant une macro WAZUHAGENTID.
+You now can start to use CentSOC and check what Wazuh Agents's Scan found in the 3 differents views for your hosts with a defined WAZUHAGENTID macro </br>
+For each view, you need to select an host and then press the Search button</br>
 
 ## Reporting > Wazuh > Vulnerabilities
 
-Ce menu permet d'avoir accès aux vunérabilités détectées sur un agent wazuh. Pour cela, vous devez sélectionner un hôte et lancer une recherche. </br>
-Vous pouvez filtrer par sévérité, par titre ou par CVE. </br>
-Vous pouvez trier les données du tableau par ordre de sévérité ou par ordre de CVSS3 Score. </br>
-Les CVE sont cliquables pour permettre d'accéder directement à la documentation d'une CVE.
+Vulnerabilities view show all vulnerabilities found by the Wazuh Agent</br>
+You can filter the results by severity, title or CVE</br>
+You can also sort the results by severity or CVES3 Score</br>
+CVE ID's are clickable and redirect to their dedicated page on cve.org
 ![image](./images/reporting_vulnerabilities.png)
 
 ## Reporting > Wazuh > File integrity
+File Integrity view show results for syscheck scans on files</br>
+You can filter by file name, or by entry type (file or regisrty_key/registry_value)</br>
+You can also sort by filesize and by date
 
-Ce menu permet d'avoir accès aux intégrités fichiers détectées sur un agent wazuh. Pour cela, vous devez sélectionner un hôte et lancer une recherche. </br>
-Vous pouvez filtrer par type (file ou registry_key/registry_value (windows)) ou par nom de fichier. </br>
-Vous pouvez trier les données du tableau par ordre de taille ou par date. </br>
+
 ![image](./images/reporting_syscheck.png)
 
 ## Reporting > Wazuh > SCA
 
-Ce menu permet d'avoir accès aux policy sur un agent wazuh. Pour cela, vous devez sélectionner un hôte et lancer une recherche. </br>
-Vous pouvez filtrer par nom de policy. </br>
+SCA view can list the conformity policies applied on the selected host, and show the results</br>
 ![image](./images/reporting_sca.png)
 
-Les policy sont cliquables et permettent d'avoir plus d'informations. </br>
-Vous pouvez filtrer par titre. </br>
-Vous pouvez trier les données du tableau par ordre de result (failed, passed, not applicable). </br>
+You can click on Policy name to get the details of the tests done by the agent </br>
+You can sort the tests by the results (failed, pass, invalid)
 ![image](./images/reporting_sca_policy.png)

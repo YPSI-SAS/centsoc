@@ -61,7 +61,7 @@ if(!isset($_GET['policy_id'])) {
     $pageSizeIndex = $_POST["page"];
   }
 
-  // Création du menu déroulant pour le nombre d'éléments par page à afficher
+  // Création du menu déroulant pour le nombre d'elements par page à afficher
   $nbElementFilter = array(10,20,30,40,50,60,70,80,90,100);
   $pageDefault = array($nbElementFilter[1] => 1);
   if ($pageSizeIndex!==null) {
@@ -110,7 +110,7 @@ if(!isset($_GET['policy_id'])) {
       exit();
     }
     $style = "one";
-    // Ajout des éléments dans le tableau final 
+    // Ajout des elements dans le tableau final 
     for ($j = 0; $j < count($values); $j++) {
       $elemArr[$j] = array(
         "MenuClass" => "list_" . $style,
@@ -191,7 +191,7 @@ if(!isset($_GET['policy_id'])) {
   );
   $form->addElement('select2', "resultFilter", _("Result"), $resultFilter, $attrMapresultStatus);
 
-  // Création du menu déroulant pour le nombre d'éléments par page à afficher
+  // Création du menu déroulant pour le nombre d'elements par page à afficher
   $nbElementFilter = array(10,20,30,40,50,60,70,80,90,100);
   $pageDefault = array($nbElementFilter[1] => 1);
   if ($pageSizeIndex!==null) {
@@ -237,7 +237,7 @@ if(!isset($_GET['policy_id'])) {
     $command = str_replace ( '<', '&lt;', $values[$j]['command']);
     $command = str_replace ( '>', '&gt;', $command);
 
-    // Ajout de l'élément dans le tableau final 
+    // Ajout de l'element dans le tableau final 
     $elemArr[$j] = array(
       "MenuClass" => "list_" . $style,
       "RowMenu_title" => $values[$j]['title'],
