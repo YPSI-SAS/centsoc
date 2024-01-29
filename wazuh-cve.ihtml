@@ -86,7 +86,7 @@
         <td></td>
         <td></td> 
         <td>
-          <p style="padding-bottom:4px; font-weight:700;">Nombre de pages: {$nbPage}</p>
+          <p style="padding-bottom:4px; font-weight:700;">Page count: {$nbPage}</p>
           <p style="padding-bottom:4px; font-weight:700;" id="page_act"></p>
         </td>      
       </tr>
@@ -136,7 +136,7 @@
 var nbRows = {$elemArrLength};
 var pageSize = {$pageSize};
 var curPage = {$curPage};
-document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+document.getElementById("page_act").innerHTML = "Current page: " + curPage;
 var statusCodeScan = {$statusCodeScan};
 </script>
 
@@ -167,7 +167,7 @@ function renderTable() {
 document.querySelector('#nextButton').addEventListener('click', function(event){
   event.preventDefault();
   if((curPage * pageSize) < nbRows) curPage++;
-  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+  document.getElementById("page_act").innerHTML = "Current page: " + curPage;
 
   renderTable();
 });
@@ -175,7 +175,7 @@ document.querySelector('#nextButton').addEventListener('click', function(event){
 document.querySelector('#prevButton').addEventListener('click',function(event){
   event.preventDefault();
   if(curPage > 1) curPage--;
-  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+  document.getElementById("page_act").innerHTML = "Current page: " + curPage;
 
   renderTable();
 

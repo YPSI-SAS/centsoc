@@ -91,7 +91,7 @@ while ($group = $dbResult->fetch()) {
   $i++;
 }
 
-// Création du menu déroulant pour le nombre d'éléments par page à afficher
+// Création du menu déroulant pour le nombre d'elements par page à afficher
 $nbElementFilter = array(10,20,30,40,50,60,70,80,90,100);
 $pageDefault = array($nbElementFilter[1] => 1);
 if ($pageSizeIndex!=null) {
@@ -168,7 +168,7 @@ if($valeurSelectIndex != null){
         break;
     }
 
-    // Ajout de l'élément dans le tableau final 
+    // Ajout de l'element dans le tableau final 
     if(strtolower(key($severityDefault)) == "all" || strtolower(key($severityDefault))==strtolower($values[$j]['severity'])){
       $elemArr[$j] = array(
         "MenuClass" => "list_" . $style,

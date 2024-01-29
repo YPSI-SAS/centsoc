@@ -13,7 +13,7 @@
           <h4>Search by file name</h4>
         </td>
         <td>
-          <p style="padding-bottom:4px; font-weight:700;" class="total-title">Total éléments: {$elemArrLength}</p>
+          <p style="padding-bottom:4px; font-weight:700;" class="total-title">Total elements: {$elemArrLength}</p>
         </td>
         <td>
           <h4>Elements per page</h4>
@@ -85,7 +85,7 @@
 var nbRows = {$elemArrLength};
 var pageSize = {$pageSize};
 var curPage = {$curPage};
-document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;
+document.getElementById("page_act").innerHTML = "Current page: " + curPage;
 var statusCodeScan = {$statusCodeScan};
 </script>
 
@@ -118,14 +118,14 @@ function renderTable() {
 document.querySelector('#nextButton').addEventListener('click', function(event){
   event.preventDefault();
   if((curPage * pageSize) < nbRows) curPage++;
-  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;  
+  document.getElementById("page_act").innerHTML = "Current page: " + curPage;  
   renderTable();
 });
 
 document.querySelector('#prevButton').addEventListener('click',function(event){
   event.preventDefault();
   if(curPage > 1) curPage--;
-  document.getElementById("page_act").innerHTML = "Page actuelle: " + curPage;  
+  document.getElementById("page_act").innerHTML = "Current page: " + curPage;  
   renderTable();
 });
 
